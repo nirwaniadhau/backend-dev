@@ -4,6 +4,7 @@ import {ApiError} from '../utils/ApiError.js';
 import {uploadOnCloudinary} from '../utils/Cloudinary.js';
 import { upload } from '../middlewares/multer.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
+ import path from 'path';
 
 const registerUser= asyncHandler( async( req,res)=>{
     // get user details from the frontend
@@ -35,7 +36,7 @@ const registerUser= asyncHandler( async( req,res)=>{
     //check if user already exists
     //we wil require the accrss to the database ( User)
     
-    const existedUser= User.findOne({
+    const existedUser=await  User.findOne({
         $or:[{username},{email}]
     })
 
@@ -47,8 +48,12 @@ const registerUser= asyncHandler( async( req,res)=>{
     console.log("req.files:",req.files);
     console.log("req.files?.avatar[0]?.path :",req.files?.avatar[0]?.path );
 
-    const avatarLocalPath=req.files?.avatar[0]?.path;
-    const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    // const avatarLocalPath=req.files?.avatar[0]?.path;
+    // const coverImageLocalPath=req.files?.coverImage[0]?.path;
+   
+
+const avatarLocalPath = req.files?.avatar[0]?.path.replace(/\\/g, '/');
+const coverImageLocalPath = req.files?.coverImage[0]?.path.replace(/\\/g, '/');
 
     if(!avatarLocalPath){
         throw new ApiError(400,"avatar file is required");
@@ -61,6 +66,7 @@ const registerUser= asyncHandler( async( req,res)=>{
     const avatar=await uploadOnCloudinary(avatarLocalPath);
     console.log("avatar",avatar);
     const  coverImage=await uploadOnCloudinary(coverImageLocalPath);
+    console.log("coverImage:",coverImage);
      
     if(!avatar){
         throw new ApiError(400,"avatar file is required");
