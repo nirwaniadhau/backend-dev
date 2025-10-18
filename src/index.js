@@ -1,26 +1,23 @@
-import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './db/index.js';
 import { DB_NAME } from './constants.js';
+import app from './app.js';   // ✅ Import the app with routes and middleware
 
-const app = express();
 dotenv.config();
+
 connectDB()
-.then(()=>{
+.then(() => {
     app.on('error', (err) => {
         console.error("Server error:", err);
         process.exit(1);
     });
 
-    app.listen(3000);
-    console.log("Connected to the database and server is running on port 3000");
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`✅ Connected to DB "${DB_NAME}" and server running on port ${PORT}`);
+    });
 })
 .catch(err => {
-    console.error("Failed to connect to the database:", err);
+    console.error("❌ Failed to connect to the database:", err);
     process.exit(1);
-}
-);
-
-
-
-
+});

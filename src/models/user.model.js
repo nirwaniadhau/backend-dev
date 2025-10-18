@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
         type: String,//cloudinary url
     },
     watchHistory:[{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Video",
     }],
     password:{
