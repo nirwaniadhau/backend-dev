@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
         required: [true,"Password is required"],
         type:String 
     },
+     refreshToken: {
+            type: String
+        }
+
     
 
 }
